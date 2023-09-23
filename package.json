@@ -1,0 +1,22 @@
+{
+  "name": "@psocket/types",
+  "version": "0.0.1-beta.1",
+  "description": "Typescript types for PSocket packets.",
+  "author": "Cohen Erickson",
+  "license": "MIT",
+  "scripts": {
+    "pretty": "prettier --write ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/P-Socket/Types.git"
+  },
+  "bugs": {
+    "url": "https://github.com/P-Socket/Types/issues"
+  },
+  "homepage": "https://github.com/P-Socket/Types#readme",
+  "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^4.2.0",
+    "prettier": "^3.0.3"
+  }
+}
