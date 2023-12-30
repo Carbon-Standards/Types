@@ -18,7 +18,7 @@ declare module "@carbon-standards/types/v1" {
      * A 32 character HEX string identifying the request.
      *
      * This should be randomly generated uppon each request in order to ensure there are no response collisions.
-     * If this isn't set or is invalid, the server will respond with an UNKNOWN_REQUEST error.
+     * If this isn't set or is invalid, the server will respond with an INVALID_REQUEST error.
      */
     id: string;
     /**
@@ -141,27 +141,29 @@ declare module "@carbon-standards/types/v1" {
      * A 32 character HEX string identifying the message.
      *
      * This should be randomly generated uppon each message in order to ensure there are no collisions.
-     * If this isn't set or is invalid, the server will respond with an UNKNOWN_REQUEST error.
+     * If this isn't set or is invalid, the server will respond with an INVALID_REQUEST error.
      */
     id: string;
-    /**
-     * A 32 character HEX string identifying the connection.
-     */
-    connection: string;
     /**
      * This value identifies what kind of action is being made.
      */
     type: "message";
+    /**
+     * A 32 character HEX string identifying the connection.
+     *
+     * If this isn't set or is invalid, the server will respond with an UNKNOWN_REQUEST error.
+     */
+    connection: string;
+    /**
+     * The data type of the message.
+     */
+    dataType: "text" | "binary";
     /**
      * An integer value representing the size of the message in bytes.
      *
      * If this value exceeds the `maxMessageSize` value set by the server, the server will respond with a BODY_TOO_LARGE error.
      */
     data: number;
-    /**
-     * The data type of the message.
-     */
-    dataType: "text" | "binary";
   };
 
   /**
