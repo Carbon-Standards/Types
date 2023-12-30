@@ -1,7 +1,10 @@
-declare module "@psocket/types" {
-  export type PSocketMeta = {
+declare module "@carbon-standards/types" {
+  /**
+   * Represents metadata about the Carbon server and how clients should behave.
+   */
+  export type CarbonMeta = {
     /**
-     * Versions that are provided by the given PSocket server.
+     * Versions that are provided by the given Carbon server.
      */
     versions: number[];
     /**
@@ -9,19 +12,19 @@ declare module "@psocket/types" {
      */
     requestTimeout: number;
     /**
-     * The maximum body size in bytes allowed by the server. If either request or response body exceeds this limit, the server will respond with an error.
+     * The maximum body size in bytes allowed by the server. If either request or response body exceeds this limit, the server will respond with a BODY_TOO_LARGE error.
      */
     maxBodySize: number;
     /**
-     * The maximum websocket message size in bytes allowed for remote connections. If any message exceeds this limit, the server will respond with an error.
+     * The maximum websocket message size in bytes allowed for remote connections. If any message exceeds this limit, the server will respond with a BODY_TOO_LARGE error.
      */
     maxMessageSize: number;
     /**
-     * The maximum packet size in bytes allowed by the server. If any packet exceeds this limit, the server will respond with an error.
+     * The maximum packet size in bytes allowed by the server. If any packet exceeds this limit, the server will respond with a BODY_TOO_LARGE error.
      */
     maxPacketSize: number;
     /**
-     * Contact information about the maintainer of the given PSocket server.
+     * Contact information about the maintainer of the given Carbon server.
      *
      * Can be used to contact maintainers about security vulnerabilities.
      */

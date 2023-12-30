@@ -1,67 +1,73 @@
-declare module "@psocket/types/v1" {
-  export type PSocketRequest = {
+declare module "@carbon-standards/types/v1" {
+  /**
+   * Represents messages sent between the client and server.
+   */
+  export type CarbonPacket =
+    | CarbonRequest
+    | CarbonResponse
+    | CarbonOpen
+    | CarbonClose
+    | CarbonMessage
+    | CarbonError;
+
+  /**
+   * Signals to the server that a remote request or connection should be made.
+   */
+  export type CarbonRequest = {
     /**
      * A 32 character HEX string identifying the request.
      *
      * This should be randomly generated uppon each request in order to ensure there are no response collisions.
-     * If this isn't set, the server will respond with an error.
+     * If this isn't set or is invalid, the server will respond with an UNKNOWN_REQUEST error.
      */
     id: string;
     /**
-     * This value is used by the server to determine what kind of action is being completed.
-     *
-     * This value may be one of seven different values.
-     *
-     * ``"request" | "response" | "connect" | "open" | "close" | "message" | "error"`
+     * This value identifies what kind of action is being made.
      */
     type: "request";
     /**
-     * A string to set request's method.
+     * HTTP method to be used when making the request.
      *
-     * If an invalid HTTP method is provided, the server will respond with an error.
+     * If an invalid HTTP method is provided, the server will respond with an INVALID_REQUEST error.
      */
     method: string;
     /**
-     * The remote URL.
+     * The remote URL of the request.
      *
-     * If this isn't set, the server will respond with an error.
+     * If this isn't set or cannot be parsed, the server will respond with an INVALID_REQUEST error.
+     *
+     * If the server fails to establish a connection, the server will respond with a CONNECTION_FAILED error.
      */
     url: string;
     /**
-     * Headers to be sent to the remote.
+     * Outgoing headers that will be sent to the remote.
      *
-     * Note that no other headers apart from what is specified here will be sent to the remote.
+     * If the headers are in an invalid format, the server will respond with an INVALID_REQUEST error.
      */
     headers: Record<string, string>;
     /**
      * An integer value representing the size of the body in bytes.
      *
-     * If set, the server will wait for the full body to be recieved before making any requests.
+     * If this value exceeds the `maxBodySize` value provided by the server, the server will respond with a BODY_TOO_LARGE error.
      */
     body?: number;
   };
 
-  export type PSocketResponse = {
+  /**
+   * Represents a response from the remote.
+   */
+  export type CarbonResponse = {
     /**
-     * The 32 character HEX string identifying the response.
+     * A 32 character HEX string identifying the request.
      *
-     * This id represents which `PSocketRequest` the given response corelates to.
+     * This should be randomly generated uppon each request in order to ensure there are no response collisions.
+     * If this isn't set or is invalid, the server will respond with an UNKNOWN_REQUEST error.
      */
     id: string;
     /**
-     * This value is used by the client to determine what kind of action is being completed.
-     *
-     * This value may be one of seven different values.
-     *
-     * ``"request" | "response" | "connect" | "open" | "close" | "message" | "error"`
+     * This value identifies what kind of action is being made.
      */
     type: "response";
-    /**
-     * The final URL provided by the response.
-     *
-     * This may differ from the request URL if the server redirected the request.
-     */
-    url: string;
     /**
      * The HTTP status code provided by the remote resource.
      */
@@ -77,84 +83,44 @@ declare module "@psocket/types/v1" {
     /**
      * An integer value representing the size of the body in bytes.
      *
-     * If set, the client will wait for the full body to be recieved before finalizing any requests.
+     * If this value exceeds the `maxBodySize` value set by the server, the server will respond with a BODY_TOO_LARGE error.
      */
     body?: number;
   };
 
-  export type PSocketConnect = {
+  /**
+   * Signals to the client or server that a websocket connection has been opened.
+   */
+  export type CarbonOpen = {
     /**
-     * The 32 character HEX string identifying the connection.
+     * A 32 character HEX string identifying the connection.
+     *
+     * This should be randomly generated uppon each connection in order to ensure there are no collisions.
      */
     id: string;
     /**
-     * This value is used by the client and server to determine what kind of action is being completed.
-     *
-     * This value may be one of seven different values.
-     *
-     * ``"request" | "response" | "connect" | "open" | "close" | "message" | "error"`
-     */
-    type: "connect";
-    /**
-     * The remote URL.
-     *
-     * If this isn't set, the server will respond with an error.
-     */
-    url: string;
-    /**
-     * The protocols to be used when connecting to the remote.
-     */
-    protocols: string[];
-    /**
-     * Headers to be sent to the remote.
-     *
-     * Note that no other headers apart from what is specified here will be sent to the remote.
-     */
-    headers: Record<string, string>;
-  };
-
-  export type PSocketOpen = {
-    /**
-     * The 32 character HEX string identifying the response.
-     */
-    id: string;
-    /**
-     * This value is used by the client and server to determine what kind of action is being completed.
-     *
-     * This value may be one of seven different values.
-     *
-     * ``"request" | "response" | "connect" | "open" | "close" | "message" | "error"`
+     * This value identifies what kind of action is being made.
      */
     type: "open";
     /**
-     * The final URL provided by the response.
-     *
-     * This may differ from the request URL if the server redirected the request.
-     */
-    url: string;
-    /**
-     * The protocol accepted by the remote.
-     */
-    protocol: string;
-    /**
-     * Headers to be sent to the remote.
-     *
-     * Note that no other headers apart from what is specified here will be sent to the remote.
+     * The response headers provided by the remote.
      */
     headers: Record<string, string>;
   };
 
-  export type PSocketClose = {
+  /**
+   * Signals to the client or server that a websocket connection should be closed.
+   */
+  export type CarbonClose = {
     /**
-     * The 32 character HEX string identifying the connection.
+     * A 32 character HEX string identifying the connection.
+     *
+     * This should be randomly generated uppon each connection in order to ensure there are no collisions.
+     * If this isn't set or is invalid, the server will respond with an UNKNOWN_REQUEST error.
      */
     id: string;
     /**
-     * This value is used by the client and server to determine what kind of action is being completed.
-     *
-     * This value may be one of seven different values.
-     *
-     * `"request" | "response" | "connect" | "open" | "close" | "message" | "error"`
+     * This value identifies what kind of action is being made.
      */
     type: "close";
     /**
@@ -167,30 +133,65 @@ declare module "@psocket/types/v1" {
     reason: string;
   };
 
-  export type PSocketMessage = {
+  /**
+   * Represents a message sent over a websocket connection.
+   */
+  export type CarbonMessage = {
     /**
-     * The 32 character HEX string identifying the connection.
+     * A 32 character HEX string identifying the message.
      *
-     * This id represents which `PSocketConnect` packet the given message corelates to.
+     * This should be randomly generated uppon each message in order to ensure there are no collisions.
+     * If this isn't set or is invalid, the server will respond with an UNKNOWN_REQUEST error.
      */
     id: string;
     /**
-     * This value is used by the client and server to determine what kind of action is being completed.
-     *
-     * This value may be one of seven different values.
-     *
-     * ``"request" | "response" | "connect" | "open" | "close" | "message" | "error"`
+     * A 32 character HEX string identifying the connection.
+     */
+    connection: string;
+    /**
+     * This value identifies what kind of action is being made.
      */
     type: "message";
     /**
      * An integer value representing the size of the message in bytes.
      *
-     * The client/server will wait for the full message to be recieved before forwarding the message.
+     * If this value exceeds the `maxMessageSize` value set by the server, the server will respond with a BODY_TOO_LARGE error.
      */
     data: number;
     /**
      * The data type of the message.
      */
     dataType: "text" | "binary";
+  };
+
+  /**
+   * Represents an error that occured on the server.
+   */
+  export type CarbonError = {
+    /**
+     * A 32 character HEX string identifying the connection.
+     *
+     * This should be randomly generated uppon each connection in order to ensure there are no collisions.
+     * If this isn't set or is invalid, the server will respond with an UNKNOWN_REQUEST error.
+     */
+    id: string;
+    /**
+     * This value identifies what kind of action is being made.
+     */
+    type: "error";
+    /**
+     * The error code.
+     */
+    code:
+      | "UNKNOWN_REQUEST"
+      | "INVALID_REQUEST"
+      | "CONNECTION_FAILED"
+      | "REQUEST_TIMEOUT"
+      | "BODY_TOO_LARGE"
+      | "UNKNOWN";
+    /**
+     * The error message.
+     */
+    message: string;
   };
 }

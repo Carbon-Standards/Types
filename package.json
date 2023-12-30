@@ -1,7 +1,7 @@
 {
-  "name": "@psocket/types",
+  "name": "@carbon-standards/types",
   "version": "0.0.1-beta.1",
-  "description": "Typescript types for PSocket packets.",
+  "description": "Typescript types for Carbon server packets.",
   "author": "Cohen Erickson",
   "license": "MIT",
   "scripts": {
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/P-Socket/Types.git"
+    "url": "git+https://github.com/Carbon-Standards/Types.git"
   },
   "bugs": {
-    "url": "https://github.com/P-Socket/Types/issues"
+    "url": "https://github.com/Carbon-Standards/Types/issues"
   },
-  "homepage": "https://github.com/P-Socket/Types#readme",
+  "homepage": "https://github.com/Carbon-Standards/Types#readme",
   "devDependencies": {
-    "@trivago/prettier-plugin-sort-imports": "^4.2.0",
-    "prettier": "^3.0.3"
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "prettier": "^3.1.1"
   }
 }
